@@ -1,0 +1,67 @@
+#!/bin/bash
+
+# Function to list processes for the current shell
+list_processes() {
+    echo "Listing processes for the current shell:"
+    ps
+}
+
+# Function to display information about a process
+display_process_info() {
+    echo -n "Enter the process ID (PID) to display information: "
+    read pid
+    echo "Information about process ID $pid:"
+    ps -p "$pid" -o pid,ppid,cmd,ni,%cpu,%mem,time
+}
+
+# Function to display the global priority of a process
+display_process_priority() {
+    echo -n "Enter the process ID (PID) to display the priority: "
+    read pid
+    echo "Global priority of process ID $pid:"
+    ps -p "$pid" -o pid,ni
+}
+
+# Function to change the priority of a process with default arguments
+change_process_priority() {
+    echo -n "Enter the process ID (PID) to change the priority: "
+    read pid
+    echo "Changing the priority of process ID $pid to default (nice value = 10)."
+    nice -n 10 -p "$pid"
+    echo "Priority of process ID $pid has been changed."
+}
+
+# Main menu
+while true; do
+    echo "Choose an option:"
+    echo "1. List processes for the current shell"
+    echo "2. Display information about a process"
+    echo "3. Display the global priority of a process"
+    echo "4. Change the priority of a process with default arguments"
+    echo "5. Exit"
+    read -p "Enter your choice: " choice
+
+    case $choice in
+        1)
+            list_processes
+            ;;
+        2)
+            display_process_info
+            ;;
+        3)
+            display_process_priority
+            ;;
+        4)
+            change_process_priority
+            ;;
+        5)
+            echo "Exiting script."
+            break
+            ;;
+        *)
+            echo "Invalid choice. Please try again."
+            ;;
+    esac
+
+    echo # Empty line for readability
+done
