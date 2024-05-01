@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Function to perform addition
+add() {
+    result=$(echo "$1 + $2" | bc -l)
+    echo "Result: $result"
+}
+
+# Function to perform subtraction
+sub() {
+    result=$(echo "$1 - $2" | bc -l)
+    echo "Result: $result"
+}
+
+# Function to perform multiplication
+mul() {
+    result=$(echo "$1 * $2" | bc -l)
+    echo "Result: $result"
+}
+
+# Function to perform division
+div() {
+    # Check if the divisor is not zero
+    if [ "$2" == "0" ]; then
+        echo "Error: Division by zero is not allowed."
+    else
+        result=$(echo "scale=2; $1 / $2" | bc -l)
+        echo "Result: $result"
+    fi
+}
+
+# Main function to handle user input and perform calculations
+calculator() {
+    echo "Enter the first number:"
+    read num1
+
+    echo "Enter the second number:"
+    read num2
+
+    echo "Choose an operation: add, sub, mul, div"
+    read operation
+
+    # Use case statement to choose the operation
+    case "$operation" in
+        add)
+            add "$num1" "$num2"
+            ;;
+        sub)
+            sub "$num1" "$num2"
+            ;;
+        mul)
+            mul "$num1" "$num2"
+            ;;
+        div)
+            div "$num1" "$num2"
+            ;;
+        *)
+            echo "Invalid operation. Please choose one of: add, sub, mul, div."
+            ;;
+    esac
+}
+
+# Run the calculator function
+calculator
