@@ -1,0 +1,53 @@
+Shell script to calculate balance of the account based on the following conditions: 
+i. Accept the account balance from the user 
+ii. Accept withdrawal amount from the user 
+iii. If withdrawal amount < 1500 then calculate the tax as 3% of the withdrawal amount 
+iv. If withdrawal amount >1500 and less than 3000 then calculate the tax as 4% of the withdrawal amount 
+v. If withdrawal amount > 3000 then calculate the tax as 5% of the withdrawal amount 
+vi. If balance is less than withdrawal amount then print insufficient balance 
+vii. Print amount withdrawn along with tax deducted
+
+#!/bin/bash
+
+# Function to calculate tax based on withdrawal amount
+calculate_tax() {
+    withdrawal_amount=$1
+
+    if [ "$withdrawal_amount" -lt 1500 ]; then
+        tax=$(echo "scale=2; $withdrawal_amount * 0.03" | bc)
+    elif [ "$withdrawal_amount" -ge 1500 ] && [ "$withdrawal_amount" -lt 3000 ]; then
+        tax=$(echo "scale=2; $withdrawal_amount * 0.04" | bc)
+    else
+        tax=$(echo "scale=2; $withdrawal_amount * 0.05" | bc)
+    fi
+
+    echo "$tax"
+}
+
+# Main script
+echo "Enter the account balance:"
+read balance
+
+echo "Enter the withdrawal amount:"
+read withdrawal_amount
+
+# Calculate tax
+tax=$(calculate_tax "$withdrawal_amount")
+
+# Calculate the total deduction (withdrawal amount + tax)
+total_deduction=$(echo "$withdrawal_amount + $tax" | bc)
+
+# Check if the account balance is sufficient
+if [ "$(echo "$balance < $total_deduction" | bc)" -eq 1 ]; then
+    echo "Insufficient balance."
+else
+    # Calculate the new balance
+    new_balance=$(echo "$balance - $total_deduction" | bc)
+    
+    # Print the withdrawal amount and tax deducted
+    echo "Amount withdrawn: $withdrawal_amount"
+    echo "Tax deducted: $tax"
+    
+    # Print the new account balance
+    echo "New account balance: $new_balance"
+fi
